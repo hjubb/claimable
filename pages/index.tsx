@@ -53,6 +53,13 @@ const SubscribeButton = styled.button`
 
 const initialResponseData = null;
 const initialErrorValue = "";
+const validTlds = [".eth", ".xyz", ".ceo", ".kred", ".art"]; // source: https://app.ens.domains/name/[root]/subdomains
+const isValidEns = (value: String) => {
+  for (const validTld of validTlds) {
+    if (value.endsWith(validTld)) return true;
+  }
+  return false;
+}
 export default function Home() {
   useEffect(() => {
     logPageView();
@@ -69,7 +76,7 @@ export default function Home() {
     setAddress(value);
     setError(initialErrorValue);
     setResponseData(initialResponseData);
-    if (value.endsWith(".eth") || value.trim().length === 42) {
+    if (isValidEns(value) || value.trim().length === 42) {
       setLoading(true);
       await fetch(`/api/claimable/${value}`)
         .then((res) => {
